@@ -14,4 +14,6 @@ else
 	. "$HOME/.xprofile"
 fi
 
+[[ -f  ~/.config/x11/xresources ]] && xrdb -merge -I$HOME ~/.config/x11/xresources
+
 ssh-agent dwm
