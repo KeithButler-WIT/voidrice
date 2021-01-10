@@ -60,7 +60,6 @@ alias \
 	cl="clear" \
 	sdn="sudo shutdown -h now" \
 	nv="nvim" \
-	sv="sudo vim" \
 	snv="sudo nvim" \
 	r="ranger" \
 	sr="sudo ranger" \
