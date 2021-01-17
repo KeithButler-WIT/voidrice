@@ -23,7 +23,6 @@ alias \
 	yt="youtube-dl --add-metadata -i" \
 	yta="yt -x -f bestaudio/best" \
 	ffmpeg="ffmpeg -hide_banner" \
-	music="mpv --shuffle ~/Music/" \
 	yt="youtube-dl --add-metadata -ic" \
 	yta="youtube-dl -f bestaudio/best --add-metadata -xic" \
 	yts="~/./.yts.sh" \
