@@ -60,9 +60,6 @@ alias \
 	sdn="sudo shutdown -h now" \
 	nv="nvim" \
 	snv="sudo nvim" \
-	r="ranger" \
-	sr="sudo ranger" \
-	nm="neomutt" \
 	reboot="sudo reboot"
 
 alias \
