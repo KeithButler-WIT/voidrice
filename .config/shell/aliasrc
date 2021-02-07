@@ -39,7 +39,6 @@ alias \
 
 # These common commands are just too long! Abbreviate them.
 alias \
-	sudo="doas" \
 	ka="killall" \
 	g="git" \
 	trem="transmission-remote" \
@@ -48,18 +47,18 @@ alias \
 	f="$FILE" \
 	e="$EDITOR" \
 	v="$EDITOR" \
-	p="sudo pacman" \
-	xi="sudo xbps-install" \
-	xr="sudo xbps-remove -R" \
+	p="doas pacman" \
+	xi="doas xbps-install" \
+	xr="doas xbps-remove -R" \
 	xq="xbps-query" \
 	z="zathura" \
 	h="history" \
 	myip="curl ipinfo.io/ip" \
 	cl="clear" \
-	sdn="sudo shutdown -h now" \
+	sdn="doas shutdown -h now" \
 	nv="nvim" \
 	snv="sudo nvim" \
-	reboot="sudo reboot"
+	reboot="doas reboot"
 
 alias \
 	magit="nvim -c MagitOnly" \
