@@ -58,7 +58,9 @@ alias \
 	sdn="doas shutdown -h now" \
 	nv="nvim" \
 	snv="sudo nvim" \
-	reboot="doas reboot"
+	reboot="doas reboot"\
+	updateWebsite="rsync -vrP --delete-after ~/org/html/* root@keithbutler.xyz:/var/www/keithbutler/" \
+	unrealEngine="/home/keith/Documents/UnrealEngine/Engine/Binaries/Linux/UE4Editor"
 
 alias \
 	magit="nvim -c MagitOnly" \
