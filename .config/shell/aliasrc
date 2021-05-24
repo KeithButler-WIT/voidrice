@@ -60,7 +60,8 @@ alias \
 	snv="sudo nvim" \
 	reboot="doas reboot"\
 	updateWebsite="rsync -vrP --delete-after ~/org/html/* root@keithbutler.xyz:/var/www/keithbutler/" \
-	unrealEngine="/home/keith/Documents/UnrealEngine/Engine/Binaries/Linux/UE4Editor"
+	unrealEngine="/home/keith/Documents/UnrealEngine/Engine/Binaries/Linux/UE4Editor" \
+	mpv="mpv --sub-auto=fuzzy"
 
 alias \
 	magit="nvim -c MagitOnly" \

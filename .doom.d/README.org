@@ -1,0 +1,245 @@
+#+TITLE: Emacs Config
+#+AUTHOR: Keith Butler
+#+PROPERTY: header-args :tangle config.el
+
+* Table of Contents :TOC:
+- [[#basics][Basics]]
+  - [[#user-setup][User Setup]]
+- [[#line-numbering][Line Numbering]]
+- [[#compiling-plantuml][Compiling Plantuml]]
+- [[#org-mode][Org Mode]]
+  - [[#org-agenda][Org Agenda]]
+  - [[#org-journal-setup][Org Journal Setup]]
+  - [[#org-roam-setup][Org Roam Setup]]
+  - [[#org-capture-templates][Org-Capture Templates]]
+  - [[#gcal][gcal]]
+- [[#new-key-bindings][New Key Bindings]]
+- [[#company-mode][Company Mode]]
+- [[#r][R]]
+- [[#c-mode][C# mode]]
+- [[#config-help][Config Help]]
+
+* Basics
+#+begin_src elisp
+(global-auto-revert-mode t)
+
+(setq doom-theme 'doom-one)
+
+;; (add-hook! 'org-mode-hook #'+org-pretty-mode #'mixed-pitch-mode)
+
+;; (add-hook! 'org-mode-hook (company-mode -1))
+;; (add-hook! 'org-capture-mode-hook (company-mode -1))
+#+end_src
+
+** User Setup
+Some functionality uses this to identify you, e.g. GPG configuration, email clients, file templates and snippets.
+#+begin_src elisp
+(setq user-full-name "Keith Butler"
+      user-mail-address "20089137@mail.wit.ie")
+#+end_src
+
+* Line Numbering
+This determines the style of line numbers in effect. If set to `nil', line
+numbers are disabled. For relative line numbers, set this to `relative'.
+#+begin_src elisp
+(setq display-line-numbers-type 'relative)
+#+end_src
+
+* Compiling Plantuml
+Adding the sdk for Plantuml (A language mostly used to draw Usecase / Class diagrams)
+#+begin_src elisp
+(setq plantuml-jar-path "~/Documents/SDKs/plantuml.jar")
+(setq org-plantuml-jar-path
+      (expand-file-name "~/Documents/SDKs/plantuml.jar"))
+#+end_src
+
+* Org Mode
+If you use `org' and don't want your org files in the default location below,
+change `org-directory'. It must be set before org loads!
+#+begin_src elisp
+(after! org
+  (setq org-directory "~/org/")
+  (setq org-agenda-files '(list "~/org" "~/org/journal" "~/org/gcal.org" "~/org/holidays.org"))
+  (setq org-log-done 'time)
+  (setq org-startup-folded 'show2levels)
+  ;;(setq org-hide-block-startup 't)
+  ;; (require 'org-bullets)
+  ;; (add-hook 'org-mode-hook (lambda () (org-bullets-mode 1)))
+  )
+#+end_src
+
+** Org Agenda
+#+begin_src elisp
+;; (use-package! org-super-agenda
+;; ;;   :after org-agenda
+;; ;;   :init
+(setq org-super-agenda-groups '((:name "Today"
+                                 :time-grid t
+                                 :scheduled today)
+                                (:name "Due today"
+                                 :deadline today)
+                                (:name "Important"
+                                 :priority "A")
+                                (:name "Overdue"
+                                 :deadline past)
+                                (:name "Due soon"
+                                 :deadline future)
+                                (:name "Big Outcomes"
+                                 :tag "bo")))
+;; ;; :config
+;; (org-super-agenda-mode))
+#+end_src
+
+** Org Journal Setup
+Generic org-journal template
+#+begin_src elisp
+(setq org-journal-date-prefix "#+TITLE "
+      org-journal-time-prefix "* "
+      org-journal-date-format "%a, %Y-%m-%d"
+      org-journal-file-format "%Y-%m-%d.org")
+#+end_src
+
+** Org Roam Setup
+Setting up the roam foldeer and roam-server package
+#+begin_src elisp
+(setq org-roam-directory "~/org/roam")
+
+(use-package org-roam-server
+  :ensure t
+  :config
+  (setq org-roam-server-host "127.0.0.1"
+        org-roam-server-port 8080
+        org-roam-server-export-inline-images t
+        org-roam-server-authenticate nil
+        org-roam-server-network-poll t
+        org-roam-server-network-arrows nil
+        org-roam-server-network-label-truncate t
+        org-roam-server-network-label-truncate-length 60
+        org-roam-server-network-label-wrap-length 20))
+#+end_src
+
+** Org-Capture Templates
+#+begin_src elisp
+(setq org-capture-templates
+      '(("a" "Appointment" entry (file  "~/org/gcal.org" )
+         "* %?\n\n%^T\n\n:PROPERTIES:\n\n:END:\n\n")
+        ("l" "Link" entry (file+headline "~/org/links.org" "Links")
+         "* %? %^L %^g \n%T" :prepend t)
+        ("b" "Blog idea" entry (file+headline "~/org/i.org" "Blog Topics:")
+         "* %?\n%T" :prepend t)
+        ("t" "To Do Item" entry (file+headline "~/org/i.org" "To Do")
+         "* TODO %?\n%u" :prepend t)
+        ("n" "Note" entry (file+headline "~/org/i.org" "Note space")
+         "* %?\n%u" :prepend t)
+        ("j" "Journal" entry (file+datetree "~/org/journal.org")
+         "* %?\nEntered on %U\n  %i\n  %a")
+        ("s" "Screencast" entry (file "~/org/screencastnotes.org")
+         "* %?\n%i\n")))
+#+end_src
+
+** gcal
+#+begin_src elisp
+(setq package-check-signature nil)
+
+(use-package org-gcal
+  :ensure t
+  :config
+  (setq org-gcal-client-id "536318722404-0pvh418ch2bn0ro8ji1j232jh7teg5bl.apps.googleusercontent.com"
+        org-gcal-client-secret "NUHrL-sYKbe9wctNJh99PB8o"
+        org-gcal-file-alist '(("keithbutler2001@gmail.com" .  "~/org/gcal.org")
+                              ("en.irish#holiday@group.v.calendar.google.com" . "~/org/holidays.org"))))
+;;("en.irish#holiday@group.v.calendar.google.com" .  "~/org/gcal.org"))))
+
+(add-hook 'org-agenda-mode-hook (lambda () (org-gcal-sync) ))
+(add-hook 'org-capture-after-finalize-hook (lambda () (org-gcal-sync) ))
+#+end_src
+
+** COMMENT Calfw
+#+begin_src elisp
+(use-package calfw
+  :ensure ;TODO:
+  :config
+  (require 'calfw)
+  (require 'calfw-org)
+  (setq cfw:org-overwrite-default-keybinding t)
+  (require 'calfw-ical)
+
+  (defun mycalendar ()
+    (interactive)
+    (cfw:open-calendar-buffer
+     :contents-sources
+     (list
+      ;; (cfw:org-create-source "Green")  ; orgmode source
+      (cfw:ical-create-source "gcal" "https://calendar.google.com/calendar/embed?src=keithbutler2001%40gmail.com&ctz=Europe%2FDublin" "IndianRed") ; devorah calender
+      ;; (cfw:ical-create-source "gcal" "https://calendar.google.com/calendar/embed?src=en.irish%23holiday%40group.v.calendar.google.com&ctz=Europe%2FDublin" "IndianRed") ; google calendar ICS
+      )))
+  (setq cfw:org-overwrite-default-keybinding t))
+
+(use-package calfw-gcal
+  :ensure t
+  :config
+  (require 'calfw-gcal))
+#+end_src
+
+* New Key Bindings
+#+begin_src elisp
+(map! :ne "M-/" #'comment-or-uncomment-region)
+(map! :ne "SPC / r" #'deadgrep)
+#+end_src
+
+* Company Mode
+#+begin_src elisp
+(eval-after-load
+    'company
+  '(add-to-list 'company-backends #'company-omnisharp))
+#+end_src
+
+* R
+#+begin_src elisp
+;; (global-font-lock-mode t)
+;; (load "/home/shimakur/Emacs/ess/lisp/ess-site")
+#+end_src
+
+* C# mode
+#+begin_src elisp
+(defun my-csharp-mode-setup ()
+  (omnisharp-mode)
+  (company-mode)
+  (flycheck-mode)
+
+  (setq indent-tabs-mode nil)
+  (setq c-syntactic-indentation t)
+  (c-set-style "ellemtel")
+  (setq c-basic-offset 4)
+  (setq truncate-lines t)
+  (setq tab-width 4)
+  (setq evil-shift-width 4)
+
+  ;csharp-mode README.md recommends this too
+  ;(electric-pair-mode 1)       ;; Emacs 24
+  ;(electric-pair-local-mode 1) ;; Emacs 25
+
+  (local-set-key (kbd "C-c r r") 'omnisharp-run-code-action-refactoring)
+  (local-set-key (kbd "C-c C-c") 'recompile))
+
+(add-hook 'csharp-mode-hook 'my-csharp-mode-setup t)
+
+#+end_src
+
+* Config Help
+Here are some additional functions/macros that could help you configure Doom:
+
+- `load!' for loading external *.el files relative to this one
+- `use-package!' for configuring packages
+- `after!' for running code after a package has loaded
+- `add-load-path!' for adding directories to the `load-path', relative to
+  this file. Emacs searches the `load-path' when you load packages with
+  `require' or `use-package'.
+- `map!' for binding new keys
+
+To get information about any of these functions/macros, move the cursor over
+the highlighted symbol at press 'K' (non-evil users must press 'C-c c k').
+This will open documentation for it, including demos of how they are used.
+
+You can also try 'gd' (or 'C-c c d') to jump to their definition and see how
+they are implemented.
