@@ -86,8 +86,8 @@
 (use-package org-gcal
   :ensure t
   :config
-  (setq org-gcal-client-id "536318722404-0pvh418ch2bn0ro8ji1j232jh7teg5bl.apps.googleusercontent.com"
-        org-gcal-client-secret "NUHrL-sYKbe9wctNJh99PB8o"
+  (setq org-gcal-client-id "public id"
+        org-gcal-client-secret "private id"
         org-gcal-file-alist '(("keithbutler2001@gmail.com" .  "~/org/gcal.org")
                               ("en.irish#holiday@group.v.calendar.google.com" . "~/org/holidays.org"))))
 ;;("en.irish#holiday@group.v.calendar.google.com" .  "~/org/gcal.org"))))
